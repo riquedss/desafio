@@ -1,32 +1,32 @@
 require 'json'
 
 class Db
-  NOME_BD = './storage/db-desafio-musica.txt'.freeze
+  NOME_BD = '../../db/storage/db-desafio-musica.txt'.freeze
   MODO_LEITURA = 'r'.freeze
   MODO_ESCRITA_END = 'a'.freeze
 
-  def initialize
-    @db = nil
-  end
+  def initialize; end
 
   def find(chave)
-    @db = abrir_conexao(MODO_LEITURA)
-    linhas = @db.readlines
-    fechar_conexao
+    db_conexao = abrir_conexao(MODO_LEITURA)
+    linhas = db_conexao.readlines
+    fechar_conexao(db_conexao)
 
     linhas.each do |linha|
       tupla = JSON.parse(linha.gsub('\n', ''))
 
       return tupla[1] if tupla[0].eql?(chave)
     end
+
+    nil
   end
 
   def escrever(chave, valor)
-    @db = abrir_conexao(MODO_ESCRITA_END)
+    db_conexao = abrir_conexao(MODO_ESCRITA_END)
 
-    @db.write(estrutura_tupla(chave, valor)) unless @db.nil?
+    db_conexao.write(estrutura_tupla(chave, valor)) unless db_conexao.nil? || find(chave)
 
-    fechar_conexao
+    fechar_conexao(db_conexao)
   end
 
   private
@@ -37,8 +37,8 @@ class Db
     nil
   end
 
-  def fechar_conexao
-    @db.close unless @db.nil?
+  def fechar_conexao(db_conexao)
+    db_conexao.close unless db_conexao.nil?
   end
 
   def estrutura_tupla(chave, valor)
