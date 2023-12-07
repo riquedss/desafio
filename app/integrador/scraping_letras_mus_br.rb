@@ -1,19 +1,21 @@
 require 'httparty' 
 require 'nokogiri'
-require '../model/musica.rb'
+require './app/model/musica.rb'
 
 class ScrapingLetrasMusBr
   URL_DOWNLOAD = "https://www.letras.mus.br/padre-marcelo-rossi/47896/"
   NOME = "Erguei As Mãos"
   NOME_AUTOR = "Padre Marcelo Rossi"
   ID = "47896"
+  DURACAO = 250
+  TRECHO_PARTICIONADOR = "E atenção agora, porque"
 
   def self.scraping!
     response = download()
 
     letra = get_letra(response)
 
-    Musica.new(ID, NOME, letra, NOME_AUTOR).save
+    Musica.new(ID, NOME, letra, NOME_AUTOR, DURACAO, TRECHO_PARTICIONADOR).save
   end
 
   def self.download()

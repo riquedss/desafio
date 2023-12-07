@@ -1,7 +1,7 @@
 require 'json'
 
 class Db
-  NOME_BD = '../../db/storage/db-desafio-musica.txt'.freeze
+  NOME_BD = './db/storage/db-desafio-musica.txt'.freeze
   MODO_LEITURA = 'r'.freeze
   MODO_ESCRITA_END = 'a'.freeze
 
@@ -13,7 +13,7 @@ class Db
     fechar_conexao(db_conexao)
 
     linhas.each do |linha|
-      tupla = JSON.parse(linha.gsub('\n', ''))
+      tupla = JSON.parse(linha.slice(0, linha.length-1))
 
       return tupla[1] if tupla[0].eql?(chave)
     end
